@@ -1,0 +1,9 @@
+namespace Nuget
+{
+    [default_interface]
+    runtimeclass Class
+    {
+        Class();
+		String  Date{ get; };
+    }
+}

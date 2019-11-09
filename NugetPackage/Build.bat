@@ -1,0 +1,1 @@
+nuget.exe pack NugetDemo.nuspec -Version 1.0.0.1

@@ -1,0 +1,9 @@
+namespace Reference_cppwinrtComponent
+{
+    [default_interface]
+    runtimeclass Class
+    {
+        Class();
+		String ProxyDate{ get; };
+    }
+}
