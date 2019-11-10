@@ -127,3 +127,21 @@ https://docs.microsoft.com/en-us/nuget/guides/create-uwp-packages
             </Extension>
         </Extensions>
     </Package>
+
+#### Package Resource Index (PRI) file
+
+[微软文档](https://docs.microsoft.com/en-us/windows/uwp/app-resources/resource-management-system#package-resource-index-pri-file)
+
+Every app package should contain a binary index of the resources in the app. This index is created at build time and it is contained in one or more Package Resource Index (PRI) files.
+
+
+* A PRI file contains actual string resources, and an indexed set of file paths that refer to various files in the package.
+* A package typically contains a single PRI file per language, named resources.pri.
+* The resources.pri file at the root of each package is automatically loaded when the ResourceManager is instantiated.
+* PRI files can be created and dumped with the tool MakePRI.exe.
+* For typical app development you won't need MakePRI.exe because it's already integrated into the Visual Studio compile workflow. And Visual Studio supports editing PRI files in a dedicated UI. However, your localizers and the tools they use might rely upon MakePRI.exe.
+* Each PRI file contains a named collection of resources, referred to as a resource map. When a PRI file from a package is loaded, the resource map name is verified to match the package identity name.
+* PRI files contain only data, so they don't use the portable executable (PE) format. They are specifically designed to be data-only as the resource format for Windows. They replace resources contained within DLLs in the Win32 app model.
+* The size limit on a PRI file is 64 kilobytes.
+
+简而言之，PRI 文件相当于传统 Win32 开发中的 资源 DLL 文件。 
