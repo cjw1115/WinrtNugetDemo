@@ -111,6 +111,62 @@ https://docs.microsoft.com/en-us/nuget/guides/create-uwp-packages
 
 微软文档会更加全面一些，而这篇博客主要是我的具体实践，对比该文档去掉了一些 暂时没发现有什么用 的步骤，添加了一些值得注意的点。
 
+微软文档里提到的如下两点，在这个 demo 里没有用到：
+
+### Package Resource Index (PRI) file
+
+[微软文档](https://docs.microsoft.com/en-us/windows/uwp/app-resources/resource-management-system#package-resource-index-pri-file)
+
+Every app package should contain a binary index of the resources in the app. This index is created at build time and it is contained in one or more Package Resource Index (PRI) files.
+
+* A PRI file contains actual string resources, and an indexed set of file paths that refer to various files in the package.
+* A package typically contains a single PRI file per language, named resources.pri.
+* The resources.pri file at the root of each package is automatically loaded when the ResourceManager is instantiated.
+* PRI files can be created and dumped with the tool MakePRI.exe.
+* For typical app development you won't need MakePRI.exe because it's already integrated into the Visual Studio compile workflow. And Visual Studio supports editing PRI files in a dedicated UI. However, your localizers and the tools they use might rely upon MakePRI.exe.
+* Each PRI file contains a named collection of resources, referred to as a resource map. When a PRI file from a package is loaded, the resource map name is verified to match the package identity name.
+* PRI files contain only data, so they don't use the portable executable (PE) format. They are specifically designed to be data-only as the resource format for Windows. They replace resources contained within DLLs in the Win32 app model.
+* The size limit on a PRI file is 64 kilobytes.
+
+简而言之，PRI 文件相当于传统 Win32 开发中的 资源 DLL 文件。 
+
+### XML documentation （Demo.xml）
+
+在 IDE 的 C++ output file 属性页面，可以打开如下选项
+
+    Generate XML Documentation files (/doc)
+
+打开之后，就会生成和我们的 native dll 同名的 .xml 文件，大致如下：
+
+    <?xml version="1.0"?>
+    <doc>
+        <assembly>
+            <name>ClassLibrary</name>
+        </assembly>
+        <members>
+            <member name="T:ClassLibrary.Demo">
+                <summary>
+                A demo how to use documentation.
+                </summary>
+            </member>
+            <member name="M:ClassLibrary.Demo.GetDate">
+                <summary>
+                Get date of now.
+                </summary>
+                <returns>a date time struct</returns>
+            </member>
+        </members>
+    </doc>
+
+当把这个 .xml 和 .dll 同事分发给使用者时，使用者在 VS IDE 里面就能获得对代码注释的 智能感知 能力。当然这要求我们在提供编写 .dll 的源代码的时候，提供规定格式的良好的注释。
+
+注释格式可以参考如下：
+
+C++ https://docs.microsoft.com/en-us/cpp/build/reference/xml-documentation-visual-cpp?view=vs-2019
+
+Dotnet(C#) https://docs.microsoft.com/en-us/dotnet/csharp/codedoc
+
+
 ## One more thing
 
 事实上在 demo.dll 是一个 COM 服务器，使用前需要先注册，在 UWP 项目里如何注册这个 COM 服务器呢？
@@ -128,20 +184,3 @@ https://docs.microsoft.com/en-us/nuget/guides/create-uwp-packages
         </Extensions>
     </Package>
 
-#### Package Resource Index (PRI) file
-
-[微软文档](https://docs.microsoft.com/en-us/windows/uwp/app-resources/resource-management-system#package-resource-index-pri-file)
-
-Every app package should contain a binary index of the resources in the app. This index is created at build time and it is contained in one or more Package Resource Index (PRI) files.
-
-
-* A PRI file contains actual string resources, and an indexed set of file paths that refer to various files in the package.
-* A package typically contains a single PRI file per language, named resources.pri.
-* The resources.pri file at the root of each package is automatically loaded when the ResourceManager is instantiated.
-* PRI files can be created and dumped with the tool MakePRI.exe.
-* For typical app development you won't need MakePRI.exe because it's already integrated into the Visual Studio compile workflow. And Visual Studio supports editing PRI files in a dedicated UI. However, your localizers and the tools they use might rely upon MakePRI.exe.
-* Each PRI file contains a named collection of resources, referred to as a resource map. When a PRI file from a package is loaded, the resource map name is verified to match the package identity name.
-* PRI files contain only data, so they don't use the portable executable (PE) format. They are specifically designed to be data-only as the resource format for Windows. They replace resources contained within DLLs in the Win32 app model.
-* The size limit on a PRI file is 64 kilobytes.
-
-简而言之，PRI 文件相当于传统 Win32 开发中的 资源 DLL 文件。 
